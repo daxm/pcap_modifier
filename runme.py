@@ -13,11 +13,54 @@ import argparse
 # User modifiable variables
 num_loops: int = 10
 source_pcap_dir: str = "pcaps"
-source_pcap_filename: str = "DCS_for_PoVf.pcap"
+source_pcap_filename: str = "infile.pcap"
 dest_pcap_dir: str = "."
-dest_pcap_filename: str = "DCS_for_PoV_v4.pcap"
+dest_pcap_filename: str = "outfile.pcap"
 source_subnet: str = "100.100.111.0/24"
 dest_subnet: str = "100.100.222.0/24"
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "-m",
+    "--multiplier",
+    help="Number of times to loop through the pcap.",
+    type=int,
+    default=num_loops,
+)
+parser.add_argument(
+    "-i",
+    "--infile",
+    help="Source pcap file.",
+    default=os.path.join(source_pcap_dir, source_pcap_filename),
+)
+parser.add_argument(
+    "-o",
+    "--outfile",
+    help="Destination file to write new pcap file.",
+    default=os.path.join(dest_pcap_dir, dest_pcap_filename),
+)
+parser.add_argument(
+    "-s",
+    "--source",
+    help="Source subnet X.X.X.X/X for PCAP alteration.",
+    default=source_subnet,
+)
+parser.add_argument(
+    "-d",
+    "--destination",
+    help="Destination subnet X.X.X.X/X for PCAP alteration.",
+    default=dest_subnet,
+)
+parser.add_argument(
+    "-v", "--verbose", help="Print output as packets are created.", default=False
+)
+parser.parse_args()
+args = parser.parse_args()
+
+source_subnet = args.source
+dest_subnet = args.destination
+num_loops = args.multiplier
+verbose = args.verbose
 
 # List of known/supported MAC OUIs
 oui_list: typing.List = [
@@ -60,6 +103,7 @@ oui_list: typing.List = [
     "90:8D:78",
     "A0:F2:17",
     "B4:96:91",
+    "44:61:32",
 ]
 
 
@@ -94,62 +138,28 @@ def modify_packet(this_packet) -> typing.NoReturn:
     :param this_packet: scapy Packet object
     :return: none
     """
-    if this_packet[IP].src != "0.0.0.0" and this_packet[IP].src != "255.255.255.255":
-        src_info = {
-            "ip": generate_ip(source_subnet),
-            "mac": generate_mac(choice(oui_list)),
-        }
-        this_packet[IP].src = src_info["ip"]
-        this_packet[Ether].src = src_info["mac"]
+    if "IP" in this_packet:
+        if this_packet[IP].src != "0.0.0.0" and this_packet[IP].src != "255.255.255.255":
+            src_info = {
+                "ip": generate_ip(source_subnet),
+                "mac": generate_mac(choice(oui_list)),
+            }
+            this_packet[IP].src = src_info["ip"]
+            this_packet[Ether].src = src_info["mac"]
 
-    if this_packet[IP].dst != "0.0.0.0" and this_packet[IP].dst != "255.255.255.255":
-        dst_info = {
-            "ip": generate_ip(dest_subnet),
-            "mac": generate_mac(choice(oui_list)),
-        }
-        this_packet[IP].dst = dst_info["ip"]
-        this_packet[Ether].dst = dst_info["mac"]
+        if this_packet[IP].dst != "0.0.0.0" and this_packet[IP].dst != "255.255.255.255":
+            dst_info = {
+                "ip": generate_ip(dest_subnet),
+                "mac": generate_mac(choice(oui_list)),
+            }
+            this_packet[IP].dst = dst_info["ip"]
+            this_packet[Ether].dst = dst_info["mac"]
+    else:
+        if verbose:
+            print("Not IPv4 packet.  Passing through unaltered.")
 
 
 def main() -> typing.NoReturn:
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "-m",
-        "--multiplier",
-        help="Number of times to loop through the pcap.",
-        type=int,
-        default=num_loops,
-    )
-    parser.add_argument(
-        "-i",
-        "--infile",
-        help="Source pcap file.",
-        default=os.path.join(source_pcap_dir, source_pcap_filename),
-    )
-    parser.add_argument(
-        "-o",
-        "--outfile",
-        help="Destination file to write new pcap file.",
-        default=os.path.join(dest_pcap_dir, dest_pcap_filename),
-    )
-    parser.add_argument(
-        "-s",
-        "--source",
-        help="Source subnet X.X.X.X/X for PCAP alteration.",
-        default=source_subnet,
-    )
-    parser.add_argument(
-        "-d",
-        "--destination",
-        help="Destination subnet X.X.X.X/X for PCAP alteration.",
-        default=dest_subnet,
-    )
-    parser.add_argument(
-        "-v", "--verbose", help="Print output as packets are created.", default=False
-    )
-    parser.parse_args()
-    args = parser.parse_args()
-
     # create packet list
     packets = []
     # Run through the source pcap file num_loops times.  Generate "similar" traffic but with different ip/mac info.
