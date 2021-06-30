@@ -139,7 +139,10 @@ def modify_packet(this_packet) -> typing.NoReturn:
     :return: none
     """
     if "IP" in this_packet:
-        if this_packet[IP].src != "0.0.0.0" and this_packet[IP].src != "255.255.255.255":
+        if (
+            this_packet[IP].src != "0.0.0.0"
+            and this_packet[IP].src != "255.255.255.255"
+        ):
             src_info = {
                 "ip": generate_ip(source_subnet),
                 "mac": generate_mac(choice(oui_list)),
@@ -147,7 +150,10 @@ def modify_packet(this_packet) -> typing.NoReturn:
             this_packet[IP].src = src_info["ip"]
             this_packet[Ether].src = src_info["mac"]
 
-        if this_packet[IP].dst != "0.0.0.0" and this_packet[IP].dst != "255.255.255.255":
+        if (
+            this_packet[IP].dst != "0.0.0.0"
+            and this_packet[IP].dst != "255.255.255.255"
+        ):
             dst_info = {
                 "ip": generate_ip(dest_subnet),
                 "mac": generate_mac(choice(oui_list)),
