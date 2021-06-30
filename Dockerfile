@@ -3,6 +3,7 @@ FROM python:3
 ARG workdir=/app
 
 RUN mkdir $workdir
+RUN mkdir $workdir/pcaps
 
 WORKDIR $workdir
 
