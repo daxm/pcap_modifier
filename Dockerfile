@@ -1,16 +1,18 @@
 FROM python:3
 
-WORKDIR /app
+ARG workdir=/app
+ARG user=this_user
+WORKDIR $workdir
 
-RUN useradd -ms /bin/bash this_user
-USER this_user
-RUN chown -R this_user:this_user $WORKDIR
+RUN useradd -ms /bin/bash $user
+USER $user
+RUN chown -R $user:$user $workdir
 
-ADD pcap_modifier.py $WORKDIR
-ADD infile.pcap $WORKDIR
-ADD requirements.txt $WORKDIR
+ADD pcap_modifier.py $workdir
+ADD infile.pcap $workdir
+ADD requirements.txt $workdir
 
 RUN pip install --no-cache-dir --upgrade pip
-RUN pip install --no-cache-dir -r $WORKDIR/requirements.txt
+RUN pip install --no-cache-dir -r $workdir/requirements.txt
 
-ENTRYPOINT ["python", "$WORKDIR/pcap_modifier.py"]
+ENTRYPOINT ["python", "$workdir/pcap_modifier.py"]
