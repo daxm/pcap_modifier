@@ -10,7 +10,8 @@ traffic or devices).
 The result will be a new pcap file with your modified parameters.
 
 ##  Docker how to use
-1.  Build docker container: `docker build .`
-1.  asdf
-1.  asdf
-1.  asdf
+1.  Build docker container: `docker build -t pcap_modifier .`
+1.  If you are re-building the container: `docker rm pcap_modifier`
+1.  Run the container and mount the local directory so that the infile and outfile can be accessed: `docker run --name 
+    pcap_modifier`
+
