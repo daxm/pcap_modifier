@@ -1,6 +1,7 @@
 FROM python:3
 
 ADD pcap_modifier.py .
+ADD infile.pcap .
 ADD requirements.txt .
 
 WORKDIR .
