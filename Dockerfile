@@ -1,12 +1,12 @@
 FROM python:3
 
 ARG workdir=/app
-ARG user=this_user
+# ARG user=this_user
 
 RUN mkdir $workdir
 
-RUN useradd -ms /bin/bash $user
-USER $user
+# RUN useradd -ms /bin/bash $user
+# USER $user
 
 WORKDIR $workdir
 
