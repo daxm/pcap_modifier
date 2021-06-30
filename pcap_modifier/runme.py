@@ -4,7 +4,7 @@
 from scapy.all import *
 
 # from scapy.utils import PcapWriter
-from random import randint, choice, getrandbits
+from random import choice, getrandbits
 import os
 from ipaddress import IPv4Network, IPv4Address
 import typing
@@ -52,7 +52,10 @@ parser.add_argument(
     default=dest_subnet,
 )
 parser.add_argument(
-    "-v", "--verbose", help="Print output as packets are created.", default=False
+    "-v",
+    "--verbose",
+    help="Print output as packets are created.",
+    action="store_true",
 )
 parser.parse_args()
 args = parser.parse_args()
