@@ -5,7 +5,6 @@ traffic or devices).
 
 # How to use
 1. Install python packages via requirements.txt file.
-1. Modify runme.py and change the "User modifiable variables" to suit your needs.
-1. Run runme.py
+1. Run runme.py either taking the defaults or passing variable changes via CLI.
 
 The result will be a new pcap file with your modified parameters.
