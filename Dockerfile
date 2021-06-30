@@ -2,11 +2,14 @@ FROM python:3
 
 ARG workdir=/app
 ARG user=this_user
-WORKDIR $workdir
+
+RUN mkdir $workdir
 
 RUN useradd -ms /bin/bash $user
 USER $user
 RUN chown -R $user:$user $workdir
+
+WORKDIR $workdir
 
 ADD pcap_modifier.py $workdir
 ADD infile.pcap $workdir
