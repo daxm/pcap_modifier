@@ -14,7 +14,7 @@ import argparse
 num_loops: int = 10
 source_pcap_dir: str = "."
 source_pcap_filename: str = "infile.pcap"
-dest_pcap_dir: str = "pcap_modifier"
+dest_pcap_dir: str = "."
 dest_pcap_filename: str = "outfile.pcap"
 source_subnet: str = "100.100.111.0/24"
 dest_subnet: str = "100.100.222.0/24"
