@@ -13,5 +13,5 @@ The result will be a new pcap file with your modified parameters.
 1.  Build docker container: `docker build -t pcap_modifier .`
 1.  If you are re-building the container: `docker rm pcap_modifier`
 1.  Run the container and mount the local directory so that the infile and outfile can be accessed: `docker run --name 
-    pcap_modifier`
-
+    pcap_modifier -h`
+    * This shows you all the arguments you can pass.  Remove the "-h" and add any options you want.
