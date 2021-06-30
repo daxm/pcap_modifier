@@ -7,7 +7,6 @@ RUN mkdir $workdir
 
 RUN useradd -ms /bin/bash $user
 USER $user
-RUN chown -R $user:$user $workdir
 
 WORKDIR $workdir
 
