@@ -12,7 +12,7 @@ import argparse
 
 # User modifiable variables
 num_loops: int = 10
-source_pcap_dir: str = "pcaps"
+source_pcap_dir: str = "."
 source_pcap_filename: str = "infile.pcap"
 dest_pcap_dir: str = "pcap_modifier"
 dest_pcap_filename: str = "outfile.pcap"
